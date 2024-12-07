@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "amqplib": "^0.10.5",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
@@ -11,7 +12,6 @@
   "name": "captain",
   "version": "1.0.0",
   "main": "server.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

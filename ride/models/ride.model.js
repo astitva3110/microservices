@@ -28,6 +28,6 @@ const rideSchema=new mongoose.Schema({
     timestamps: true
 })
 
-const Ride=new mongooose.model('Ride',rideSchema);
+const Ride=new mongoose.model('Ride',rideSchema);
 
 module.exports=Ride;

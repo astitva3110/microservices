@@ -2,6 +2,9 @@ const Captain = require('../models/captain.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
+const { subscribeToQueue } = require('../service/rabbit')
+
+// const pendingRequests = [];
 
 
 exports.postRegister=async(req,res)=>{
@@ -64,8 +67,41 @@ module.exports.logout = async (req, res) => {
 
 module.exports.profile = async (req, res) => {
     try {
-        res.send(req.captain);
+        res.status(202).json({captain:req.captain});
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
+
+
+module.exports.toggleAvailability = async (req, res) => {
+    try {
+        const captain = await captainModel.findById(req.captain._id);
+        captain.isAvailable = !captain.isAvailable;
+        await captain.save();
+        res.send(captain);
+    } catch (error) {
+
+        res.status(500).json({ message: error.message });
+    }
+}
+
+let pendingRequests = [];
+
+module.exports.waitForNewRide = async (req, res) => {
+    req.setTimeout(30000, () => {
+        res.status(204).end(); 
+    });
+    pendingRequests.push(res);
+};
+
+subscribeToQueue("new-ride", (data) => {
+    const rideData = JSON.parse(data);
+
+    
+    pendingRequests.forEach(res => {
+        res.json(rideData);
+    });
+
+    pendingRequests.length = 0;
+});

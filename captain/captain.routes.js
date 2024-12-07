@@ -10,6 +10,7 @@ router.post('/register',userController.postRegister);
 router.post('/login',userController.postLogin);
 router.get('/logout', userController.logout);
 router.get('/profile', authMiddleware.userAuth, userController.profile);
-
+router.patch('/toggle-availability', authMiddleware.userAuth, userController.toggleAvailability);
+router.get('/new-ride',authMiddleware.userAuth, userController.waitForNewRide);
 
 module.exports=router;
